@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/mega_/OneDrive/เดสก์ท็อป/Data/SQL 101/SQL live 3/chinook.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="125"/><column_width id="3" width="5166"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,6:mainalbums"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="UNION">CREATE TABLE IF NOT EXISTS customer_usa_france AS 
+	SELECT FirstName, LastName, country, Email
+	FROM customers WHERE Country = 'USA'
+	UNION
+	SELECT FirstName, LastName, country, Email
+	FROM customers WHERE Country = 'France';
+
+-- column ต้องมีจำนวนเท่ากันถึงจะใช้คำสั่ง UNION ได้
+-- UNION จะ - Duplication ออก
+-- ถ้าอยากเก็บไว้ให้ใช้คำสั่ง Union all</sql><sql name="DROP">DROP TABLE customer_usa_france;</sql><sql name="INVOICE">CREATE VIEW customer_inv_summary AS  --VIRTUAL(STORED QUERY)
+	SELECT 
+		c.FirstName,
+		c.LastName,
+		c.Country,
+		sum(i.total) AS total_invoice
+	FROM customers c
+	JOIN invoices i
+	ON c.CustomerId = i.CustomerId
+	GROUP BY 1, 2, 3
+	ORDER BY 4 DESC;</sql><sql name="CUSTOMER_VIEW">CREATE VIEW top_ten_customers AS
+SELECT * FROM customer_inv_summary
+LIMIT 10;
+</sql><sql name="BAR">BAR-SELECT
+LastName AS label,
+total_invoice AS y 
+FROM top_ten_customers;</sql><sql name="SQL 6">DROP VIEW revenue_by_year;
+
+CREATE VIEW revenue_by_year AS
+SELECT
+	strftime('%Y',invoicedate) AS YEAR,
+	ROUND(sum(total),4)        AS reveneue 
+FROM invoices
+GROUP BY 1;</sql><sql name="SQL 7">Line-SELECT month_id AS label, revenue AS y FROM revenue_by_year;</sql><sql name="WINDOW function">--windows function
+SELECT segment, COUNT(*)
+FROM(
+	SELECT
+		name, 
+		Bytes,
+		NTILE(5) OVER(ORDER BY Bytes) AS segment
+	FROM tracks
+)
+	GROUP BY segment;
+</sql><sql name="SQL 9">SELECT 
+	*, 
+	SUM(revenue) OVER()
+FROM revenue_by_year</sql><current_tab id="8"/></tab_sql></sqlb_project>

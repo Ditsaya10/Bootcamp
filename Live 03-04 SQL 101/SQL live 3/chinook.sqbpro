@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/mega_/OneDrive/เดสก์ท็อป/Data/SQL 101/SQL live 3/chinook.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="125"/><column_width id="3" width="5166"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,6:mainalbums"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1">SELECT
+	g.name AS genre_name,
+	COUNT(*) AS counte_songs ,
+	SUM(t.milliseconds/60000.0) AS sum_minute,
+	SUM(t.bytes/ (1024.0*1024)) AS sum_mb
+FROM artists ar
+JOIN albums  a ON ar.ArtistId = a.ArtistId
+JOIN tracks  t ON t.AlbumId   = a.AlbumId
+JOIN genres  g ON g.GenreId   = t.GenreId
+Group by g.name
+ORDER by COUNT(*) DESC
+LIMIT 5;</sql><sql name="SQL 2">SELECT FirstName, LastName, Email
+FROM
+(
+SELECT * FROM customers
+WHERE country = 'USA'
+)</sql><sql name="SQL 3">WITH usa_customers AS (
+	SELECT * FROM customers
+	WHERE country = 'USA'
+), invoices_2009 AS (
+	SELECT * FROM invoices
+	WHERE strftime('%Y', invoicedate) = '2009'
+)
+SELECT 
+	cus.FirstName,
+	SUM(inv.total) sum_invoice
+FROM usa_customers cus
+JOIN invoices_2009 inv
+ON cus.CustomerId = inv.customerid
+GROUP By 1;</sql><sql name="SQL 4">WITH usa_customers AS (
+	SELECT * FROM customers
+	WHERE country = 'USA'
+), invoices_2009 AS (
+	SELECT * FROM invoices
+	WHERE strftime('%Y', invoicedate) = '2009'
+)
+SELECT 
+	cus.FirstName,
+	SUM(inv.total) sum_invoice
+FROM (
+	SELECT * FROM customers
+	WHERE country = 'USA'
+) cus
+JOIN (
+	SELECT * FROM invoices
+	WHERE strftime('%Y', invoicedate) = '2009'
+) inv
+ON cus.CustomerId = inv.customerid
+GROUP By 1;</sql><sql name="SQL 5">SELECT * FROM tracks
+WHERE bytes &gt; (SELECT AVG(bytes) FROM tracks);</sql><sql name="Column index">SELECT
+	country,
+	state,
+	COUNT(country)
+FROM customers
+GROUP BY 1, 2 -- column index
+order by 3 DESC 
+LIMIT 5;
+</sql><sql name="SQL 7">-- join 4 TABLE
+-- denoramalization
+
+SELECT 
+	ge.name,
+	COUNT(*) songs
+FROM artists ar
+JOIN albums al ON ar.ArtistId  = al.ArtistId
+JOIN tracks tr ON al.AlbumId   = tr.AlbumId
+JOIN genres ge ON tr.GenreId   = ge.GenreId
+Group by 1;</sql><current_tab id="6"/></tab_sql></sqlb_project>

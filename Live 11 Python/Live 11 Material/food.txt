@@ -1,0 +1,5 @@
+hamburger
+hotdog
+pizza
+salad
+french fried
